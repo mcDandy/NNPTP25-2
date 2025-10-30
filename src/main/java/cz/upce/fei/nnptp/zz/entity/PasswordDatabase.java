@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.upce.fei.nnptp.zz.entity;
 
 import java.io.File;
 import java.util.*;
 
-/**
- *
- * @author Roman
- */
 public class PasswordDatabase {
     private File file;
     private String password;
@@ -35,6 +26,12 @@ public class PasswordDatabase {
     }
     
     public void add(Password password) {
+        if (Objects.isNull(password))
+            throw new NullPointerException("Password is null");
+
+        if (passwords.stream().anyMatch(p -> p.getId() == password.getId()))
+            throw new IllegalStateException("Password with this ID already exists");
+
         passwords.add(password);
     }
     

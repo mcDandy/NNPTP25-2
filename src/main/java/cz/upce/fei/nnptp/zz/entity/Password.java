@@ -2,10 +2,6 @@ package cz.upce.fei.nnptp.zz.entity;
 
 import java.util.HashMap;
 
-/**
- *
- * @author Roman
- */
 public class Password {
 
     private int id;
@@ -46,6 +42,4 @@ public class Password {
         return (parameters != null) ? parameters.get(key) : null;
     }
     
-    
-
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.upce.fei.nnptp.zz.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,10 +12,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- *
- * @author st69851
- */
 public class PasswordDatabaseTest {
     
     public PasswordDatabaseTest() {
@@ -48,14 +39,6 @@ public class PasswordDatabaseTest {
         database.save();
 
         assertTrue(Files.exists(tempDirectory.resolve("TestEmpty.txt")));
-    }
-
-    @Test
-    public void testSaveNullPassword() {
-        PasswordDatabase database = new PasswordDatabase(tempDirectory.resolve("TestNull.txt").toFile(), "password");
-        database.add(null);
-        assertThrows(NullPointerException.class, database::save);
-        assertFalse(Files.exists(tempDirectory.resolve("TestNull.txt")));
     }
 
     @Test
@@ -90,5 +73,24 @@ public class PasswordDatabaseTest {
         JSON json = new JSON();
         List<Password> v = json.fromJson("[{username:\"user\",password:\"pswd\"},{username:\"user\",password:\"pswd\"},{username:\"user\",password:\"pswd\"},{username:\"user\",password:\"pswd\"},{username:\"user\",password:\"pswd\"}]");
         assertEquals(5, v.size());
+    }
+
+    @Test
+    void testAddNullPassword() {
+        PasswordDatabase database = new PasswordDatabase(new File(""), "password");
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> database.add(null));
+        assertEquals("Password is null", exception.getMessage());
+    }
+
+    @Test
+    void testAddDuplicatePasswordId() {
+        PasswordDatabase database = new PasswordDatabase(new File(""), "password");
+        Password password = new Password(1, "password1");
+        Password password2 = new Password(1, "password2");
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            database.add(password);
+            database.add(password2);
+        });
+        assertEquals("Password with this ID already exists", exception.getMessage());
     }
 }
